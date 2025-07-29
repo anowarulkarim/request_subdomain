@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_request_subdomain_list" model="ir.ui.view">
+        <field name="name">request.subdomain.list</field>
+        <field name="model">request_subdomain.requestsubdomain</field>
+        <field name="arch" type="xml">
+            <list string="Subdomain Requests">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="subdomain"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_request_subdomain_form" model="ir.ui.view">
+        <field name="name">request.subdomain.form</field>
+        <field name="model">request_subdomain.requestsubdomain</field>
+        <field name="arch" type="xml">
+            <form string="Request Subdomain">
+                <sheet>
+                    <header>
+                        <button name="action_accept" type="object" class="btn-primary" string="Accept"/>
+                        <button name="action_decline" type="object" class="btn-secondary" string="Decline"/>
+                        <button special="cancel" class="btn-light" string="Cancel"/>
+                    </header>
+                    <group>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="subdomain" placeholder="Max 10 characters"/>
+                        <field name="module_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_request_subdomain" model="ir.actions.act_window">
+        <field name="name">Subdomain Requests</field>
+        <field name="res_model">request_subdomain.requestsubdomain</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

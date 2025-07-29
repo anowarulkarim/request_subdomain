@@ -1,0 +1,8 @@
+<odoo>
+<menuitem id="menu_request_subdomain_root" name="Subdomain Management"/>
+
+<menuitem id="menu_request_subdomain"
+          name="Requests"
+          parent="menu_request_subdomain_root"
+          action="action_request_subdomain"/>
+</odoo>

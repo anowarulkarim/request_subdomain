@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="portal_supplies"  inherit_id="website.navbar_nav">
+        <xpath expr="//ul" position="inside">
+            <li t-if="request.env.user.is_public" class="nav-item">
+                <a class="nav-link" href="/my/request_subdomain">Request Subdomain</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_request_subdomain" name="Request Subdomain">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h1>Request a Subdomain</h1>
+                <form action="/my/request-subdomain/submit" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" required="True"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required="True"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subdomain</label>
+                        <input type="text" name="subdomain" class="form-control" maxlength="10" required="True"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Modules</label>
+                        <select name="module_ids" class="form-select" multiple="multiple" required="true">
+                            <t t-foreach="modules" t-as="mod">
+                                <option t-att-value="mod.name">
+                                    <t t-esc="mod.shortdesc or mod.name"/>
+                                </option>
+                            </t>
+                        </select>
+                        <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple modules.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </form>
+            </div>
+        </t>
+    </template>
+
+</odoo>
