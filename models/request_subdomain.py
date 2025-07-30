@@ -9,6 +9,7 @@ class RequestSubdomain(models.Model):
     email = fields.Char(string = "email")
     subdomain = fields.Char(string="Subdomain", size=10)
     module_ids = fields.Many2many('ir.module.module', string="Select Modules")
+    is_active = fields.Boolean(string="Is active")
 
     def action_accept(self):
         for record in self:
@@ -61,14 +62,8 @@ db_filter = ^{record.subdomain}-db
             with open(caddyfile_path, 'a') as f:
                 f.write(caddy_entry)
 
-            time.sleep(2)
 
-            # Optional: check if file truly exists before running docker-compose
-            if not os.path.exists(compose_filename):
-                raise FileNotFoundError(f"{compose_filename} not found")
-            command=f"docker-compose -f {compose_filename} up"
-            subprocess.run(command,shell=True)
-
+            record.is_active=True
         return {'type': 'ir.actions.act_window_close'}
 
     def action_decline(self):

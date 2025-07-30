@@ -10,6 +10,7 @@
                 <field name="name"/>
                 <field name="email"/>
                 <field name="subdomain"/>
+                <field name="is_active"/>
             </list>
         </field>
     </record>
@@ -22,7 +23,7 @@
             <form string="Request Subdomain">
                 <sheet>
                     <header>
-                        <button name="action_accept" type="object" class="btn-primary" string="Accept"/>
+                        <button name="action_accept" type="object" class="btn-primary" string="Accept" invisible="is_active==True"/>
                         <button name="action_decline" type="object" class="btn-secondary" string="Decline"/>
                         <button special="cancel" class="btn-light" string="Cancel"/>
                     </header>
