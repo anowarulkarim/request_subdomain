@@ -66,7 +66,7 @@ db_filter = ^{record.subdomain}-db
             # Optional: check if file truly exists before running docker-compose
             if not os.path.exists(compose_filename):
                 raise FileNotFoundError(f"{compose_filename} not found")
-            command=f"docker-compose -f {compose_filename} up -d && docker-compose restart caddy"
+            command=f"docker-compose -f {compose_filename} up"
             subprocess.run(command,shell=True)
 
         return {'type': 'ir.actions.act_window_close'}
