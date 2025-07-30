@@ -38,6 +38,7 @@ networks:
     """
             conf_filename=f"/opt/odoo-on-docker/conf/{record.subdomain}.conf"
             conf_content=f"""\
+[options]
 admin_passwd = admin-12321
 db_host = db
 db_port = 5432
