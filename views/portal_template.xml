@@ -24,7 +24,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Subdomain</label>
-                        <input type="text" name="subdomain" class="form-control" maxlength="10" required="True"/>
+                        <input id="subdomain_input" type="text" name="subdomain" class="form-control" maxlength="10" required="True"/>
+                        <small id="subdomain_input_error" style="color: red; display:none;">This subdomain is already in use</small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Select Modules</label>
@@ -37,9 +38,10 @@
                         </select>
                         <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple modules.</small>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                    <button type="submit" class="btn btn-primary" id="subdomain_request_submit">Submit Request</button>
                 </form>
             </div>
+            <script src="/request_subdomain/static/src/js/check_domain_availability.js">Check availability</script>
         </t>
     </template>
 

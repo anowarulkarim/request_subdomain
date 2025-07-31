@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -30,3 +32,14 @@ class RequestSubdomain(http.Controller):
         })
 
         return request.redirect('/my/request_subdomain')
+
+    @http.route('/check-subdomains', type='json', auth='public', csrf=False)
+    def check_subdomains(self):
+        subdomains = []
+        try:
+            with open('/opt/odoo-on-docker/Caddyfile', 'r') as f:
+                content = f.read()
+                subdomains = re.findall(r'(\w+)\.myodootest\.space', content)
+        except Exception as e:
+            return {'error': str(e)}
+        return {'subdomains': list(set(subdomains))}
