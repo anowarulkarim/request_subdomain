@@ -1,5 +1,8 @@
+from email.policy import default
+from tokenize import String
+
 from odoo import fields, models, api
-import subprocess,time,os
+import time,os
 
 class RequestSubdomain(models.Model):
     _name = 'request_subdomain.requestsubdomain'
@@ -10,6 +13,15 @@ class RequestSubdomain(models.Model):
     subdomain = fields.Char(string="Subdomain", size=10)
     module_ids = fields.Many2many('ir.module.module', string="Select Modules")
     is_active = fields.Boolean(string="Is active")
+    is_stop = fields.Boolean(string="Is stop")
+    status = fields.Selection([
+        ('draft','Draft'),
+        ('active','Active'),
+        ('stopped','Stopped'),
+    ],
+        String='Status',
+        default='draft'
+    )
 
     def action_accept(self):
         for record in self:
@@ -64,8 +76,102 @@ db_filter = ^{record.subdomain}-db
 
 
             record.is_active=True
+            record.is_stop=False
+            record.status='active'
         return {'type': 'ir.actions.act_window_close'}
 
     def action_decline(self):
-        # logic for declining the subdomain
-        return {'type': 'ir.actions.act_window_close'}
+        for rec in self:
+            subdomain = rec.subdomain
+
+            # Define file paths
+            yml_path = f"/opt/odoo-on-docker/{subdomain}-compose.yml"
+            conf_path = f"/opt/odoo-on-docker/conf/{subdomain}.conf"
+            caddyfile_path = "/opt/odoo-on-docker/Caddyfile"
+
+            # Delete .yml file if exists
+            if os.path.exists(yml_path):
+                os.remove(yml_path)
+
+            # Delete .conf file if exists
+            if os.path.exists(conf_path):
+                os.remove(conf_path)
+
+            # Remove the subdomain block from the Caddyfile
+            if os.path.exists(caddyfile_path):
+                with open(caddyfile_path, "r") as file:
+                    lines = file.readlines()
+
+                new_lines = []
+                inside_block = False
+
+                for line in lines:
+                    # Detect start of subdomain block
+                    if subdomain in line:
+                        inside_block = True
+                        continue
+
+                    # End of block detected
+                    if inside_block and line.strip() == "}":
+                        inside_block = False
+                        continue
+
+                    # If not inside the subdomain block, keep the line
+                    if not inside_block:
+                        new_lines.append(line)
+
+                # Overwrite the Caddyfile
+                with open(caddyfile_path, "w") as file:
+                    file.writelines(new_lines)
+
+        # Delete the record
+        self.unlink()
+
+        # Reload client UI
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {
+                'model': 'request_subdomain.requestsubdomain',
+                'view_mode': 'list,form',
+            }
+        }
+
+    # def action_decline(self):
+    #     # logic for declining the subdomain
+    #     super().unlink()
+    #     # return {
+    #     #     'type': 'ir.actions.act_window',
+    #     #     'name': 'Subdomain Request',
+    #     #     'view_mode': 'list',
+    #     #     'res_model': 'request_subdomain.requestsubdomain',
+    #     #     'target': 'current',
+    #     #     'tag':'reload'
+    #     # }
+    #
+    #     return {
+    #         'type': 'ir.actions.client',
+    #         'tag': 'reload',  # Reloads the view to reflect the unlinked record
+    #         'params': {
+    #             'model': 'request_subdomain.requestsubdomain',
+    #             'view_mode': 'list,form',
+    #         }
+    #     }
+    #     # return False
+
+    def action_stop(self):
+        for record in self:
+            file_path="/opt/odoo-on-docker/stop.txt"
+            with open(file_path,'a') as f:
+                f.write(f"{record.subdomain}\n")
+
+            self.status="stopped"
+
+    def action_start(self):
+        for record in self:
+            file_path="/opt/odoo-on-docker/start.txt"
+            with open(file_path,'a') as f:
+                f.write(f"{record.subdomain}\n")
+
+            self.status="active"
+
