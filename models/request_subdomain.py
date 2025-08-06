@@ -48,6 +48,8 @@ services:
 networks:
   odoo-net:
     external: true
+volumes:
+  odoo_db_data:
     """
             conf_filename=f"/opt/odoo-on-docker/conf/{record.subdomain}.conf"
             conf_content=f"""\
