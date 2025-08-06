@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <template id="portal_my_rfq" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[@id='portal_common_category']" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
+                <t t-set="title">Subdomain List</t>
+                <t t-set="text">Subdomaina</t>
+                <t t-set="url" t-value="'/my/subdomains'"/>
+                <t t-set="config_card" t-value="True"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="portal_supplies"  inherit_id="website.navbar_nav">
         <xpath expr="//ul" position="inside">
             <li t-if="request.env.user.is_public" class="nav-item">
@@ -44,5 +56,33 @@
             <script src="/request_subdomain/static/src/js/check_domain_availability.js">Check availability</script>
         </t>
     </template>
+
+    <template id="subdomain_list" name="Subdomain List">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Available Subdomains</h4>
+                    </div>
+                    <div class="card-body">
+                        <t t-if="subdomains">
+                            <ul class="list-group">
+                                <t t-foreach="subdomains" t-as="sub">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><i class="fa fa-globe me-2 text-secondary"></i> <t t-esc="sub" /></span>
+                                        <a t-att-href="'http://' + sub" class="btn btn-sm btn-outline-primary" target="_blank">Visit</a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                        <t t-else="">
+                            <p class="text-muted text-center mb-0">No subdomains found.</p>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
 
 </odoo>

@@ -43,3 +43,19 @@ class RequestSubdomain(http.Controller):
         except Exception as e:
             return {'error': str(e)}
         return {'subdomains': list(set(subdomains))}
+
+    @http.route('/my/subdomains', type='http', auth='user', website=True)
+    def portal_subdomains(self, **kw):
+        subdomains = []
+        try:
+            with open('/opt/odoo-on-docker/Caddyfile', 'r') as f:
+                content = f.read()
+                # Match full domain like abc.myodootest.space
+                subdomains = re.findall(r'(\w+\.myodootest\.space)', content)
+                subdomains = list(set(subdomains))  # Remove duplicates
+        except Exception as e:
+            subdomains = ['Error: ' + str(e)]
+
+        return request.render('request_subdomain.subdomain_list', {
+            'subdomains': subdomains
+        })
