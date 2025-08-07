@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="portal_my_rfq" inherit_id="portal.portal_my_home">
+    <template id="portal_my_home_rfp_breadcrumbs" name="Portal RFP Menu" inherit_id="portal.portal_breadcrumbs"
+              priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'requesting_subdomain'" class="breadcrumb-item">
+                <t t-esc="'Request Subdomain'"/>
+            </li>
+            <li t-if="page_name == 'subdomain_list'" class="breadcrumb-item">
+                <t t-esc="'All Subdomains'"/>
+            </li>
+        </xpath>
+    </template>
+    <template id="portal_my_subdomains" inherit_id="portal.portal_my_home">
         <xpath expr="//div[@id='portal_common_category']" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>

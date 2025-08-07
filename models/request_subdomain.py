@@ -41,7 +41,7 @@ services:
       - /opt/odoo/custom-addons/odoo-18ee-custom-addons:/mnt/extra-addons
       - ./conf/{record.subdomain}.conf:/etc/odoo/odoo.conf
     command: >
-      odoo -d {record.subdomain}-db -i base,{module_names}
+      odoo -d {record.subdomain}-db -i {module_names}
     networks:
       - odoo-net
 

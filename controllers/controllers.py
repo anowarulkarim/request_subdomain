@@ -12,6 +12,7 @@ class RequestSubdomain(http.Controller):
         ctx = {
             'frontend_languages': [{'code': 'en_US', 'name': 'English'}],
             'modules': modules,
+            'page_name': 'requesting_subdomain'
         }
         return request.render('request_subdomain.portal_request_subdomain',ctx)
 
@@ -57,5 +58,6 @@ class RequestSubdomain(http.Controller):
             subdomains = ['Error: ' + str(e)]
 
         return request.render('request_subdomain.subdomain_list', {
-            'subdomains': subdomains
+            'subdomains': subdomains,
+            'page_name':'subdomain_list',
         })
