@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+
+    <record id="view_request_subdomain_search" model="ir.ui.view">
+        <field name="name">request.subdomain.search</field>
+        <field name="model">request_subdomain.requestsubdomain</field>
+        <field name="arch" type="xml">
+            <search string="Search Request Subdomain">
+                <field name="name" string="Name"/>
+                <field name="email" string="Email"/>
+                <field name="subdomain" string="Subdomain"/>
+
+                <filter string="Active" name="filter_active" domain="[('is_active', '=', True)]"/>
+                <filter string="Stopped" name="filter_stopped" domain="[('is_stop', '=', True)]"/>
+                <filter string="Draft Status" name="filter_draft" domain="[('status', '=', 'draft')]"/>
+                <filter string="Active Status" name="filter_status_active" domain="[('status', '=', 'active')]"/>
+                <filter string="Stopped Status" name="filter_status_stopped" domain="[('status', '=', 'stopped')]"/>
+
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Is Active" name="group_by_is_active" context="{'group_by': 'is_active'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Tree View -->
     <record id="view_request_subdomain_list" model="ir.ui.view">
         <field name="name">request.subdomain.list</field>

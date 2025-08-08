@@ -16,7 +16,7 @@
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
                 <t t-set="title">Subdomain List</t>
-                <t t-set="text">Subdomaina</t>
+                <t t-set="text">Subdomains</t>
                 <t t-set="url" t-value="'/my/subdomains'"/>
                 <t t-set="config_card" t-value="True"/>
             </t>
