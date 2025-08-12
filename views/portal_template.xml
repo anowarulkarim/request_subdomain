@@ -95,5 +95,30 @@
         </t>
     </template>
 
+    <template id="portal_request_thankyou" name="Request Subdomain - Thank You">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-5">
+                <div class="card p-4">
+                    <h1 class="h3 mb-3">Thank you!</h1>
+                    <p class="lead">
+                        Your subdomain request has been submitted successfully.
+                    </p>
+                    <p>
+                        We will review your request and get back to you by email.
+                    </p>
+
+                    <div class="mt-4">
+                        <a t-att-href="request.env['ir.config_parameter'].sudo().get_param('web.base.url', '/')" class="btn btn-outline-primary me-2">
+                            Back to Website
+                        </a>
+                        <a t-att-href="'/my'" class="btn btn-primary">
+                            Go to My Portal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
 
 </odoo>

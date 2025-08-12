@@ -32,7 +32,9 @@ class RequestSubdomain(http.Controller):
                 (6, 0, request.env['ir.module.module'].sudo().search([('name', 'in', selected_modules)]).ids)]
         })
 
-        return request.redirect('/my/request_subdomain')
+        return request.redirect('/request-subdomain/thank-you')
+
+        # return request.redirect('/my/request_subdomain')
 
     @http.route('/check-subdomains', type='json', auth='public', csrf=False)
     def check_subdomains(self):
@@ -61,3 +63,8 @@ class RequestSubdomain(http.Controller):
             'subdomains': subdomains,
             'page_name':'subdomain_list',
         })
+
+    @http.route(['/request-subdomain/thank-you', '/my/request-subdomain/thank-you'], type='http', auth='public',
+                website=True)
+    def request_thankyou(self, **kw):
+        return request.render('request_subdomain.portal_request_thankyou')
