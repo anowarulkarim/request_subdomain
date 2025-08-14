@@ -7,6 +7,7 @@
     'description': """
 Long description of module's purpose
     """,
+    'post_init_hook': 'post_init_hook',
 
     'author': "My Company",
 
@@ -17,7 +18,7 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','web'],
+    'depends': ['base','web','base_setup','sale_management','website'],
 
     # always loaded
     'data': [
@@ -25,8 +26,9 @@ Long description of module's purpose
         'views/views.xml',
         'views/templates.xml',
         'views/request_subdomain.xml',
-        'views/menu.xml',
         'views/portal_template.xml',
+        'views/subdomain_settings.xml',
+        'views/menu.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

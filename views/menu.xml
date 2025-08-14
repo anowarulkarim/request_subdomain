@@ -1,8 +1,16 @@
 <odoo>
-<menuitem id="menu_request_subdomain_root" name="Subdomain Management"/>
+    <menuitem id="menu_request_subdomain_root"
+              name="Subdomain Management"
+              web_icon="request_subdomain,static/description/icon.png"
+    />
 
-<menuitem id="menu_request_subdomain"
-          name="Requests"
-          parent="menu_request_subdomain_root"
-          action="action_request_subdomain"/>
+    <menuitem id="menu_request_subdomain"
+              name="Requests"
+              parent="menu_request_subdomain_root"
+              action="action_request_subdomain"/>
+    <menuitem id="menu_request_subdomain_settings"
+              name="Settings"
+              parent="menu_request_subdomain_root"
+              action="action_request_subdomain_settings"
+              sequence="10"/>
 </odoo>

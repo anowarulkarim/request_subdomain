@@ -11,8 +11,6 @@
                 <field name="email" string="Email"/>
                 <field name="subdomain" string="Subdomain"/>
 
-                <filter string="Active" name="filter_active" domain="[('is_active', '=', True)]"/>
-                <filter string="Stopped" name="filter_stopped" domain="[('is_stop', '=', True)]"/>
                 <filter string="Draft Status" name="filter_draft" domain="[('status', '=', 'draft')]"/>
                 <filter string="Active Status" name="filter_status_active" domain="[('status', '=', 'active')]"/>
                 <filter string="Stopped Status" name="filter_status_stopped" domain="[('status', '=', 'stopped')]"/>
@@ -20,7 +18,6 @@
                 <!-- Group By -->
                 <group expand="0" string="Group By">
                     <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
-                    <filter string="Is Active" name="group_by_is_active" context="{'group_by': 'is_active'}"/>
                 </group>
             </search>
         </field>
@@ -35,7 +32,7 @@
                 <field name="name"/>
                 <field name="email"/>
                 <field name="subdomain"/>
-                <field name="is_active"/>
+                <field name="status"/>
             </list>
         </field>
     </record>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_res_config_settings_request_subdomain" model="ir.ui.view">
+        <field name="name">res.config.settings.request.subdomain</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Request Subdomain" name="request_subdomain">
+                    <block title="Approval Settings">
+                        <setting id="approval_process_settings" string="Approval Process">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <field class="w-50" name="approval_process"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_request_subdomain_settings" model="ir.actions.act_window">
+        <field name="name">Request Subdomain Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'request_subdomain', 'bin_size': False}</field>
+    </record>
+</odoo>

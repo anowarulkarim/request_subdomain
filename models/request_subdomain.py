@@ -177,3 +177,28 @@ db_filter = ^{record.subdomain}-db
 
             self.status="active"
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        record = self.browse()
+        for vals in vals_list:
+            # Ensure subdomain is lowercase or uppercase as needed
+            if 'subdomain' in vals and vals['subdomain']:
+                vals['subdomain'] = vals['subdomain'].lower()  # or .upper() if you prefer
+
+            # Ensure name is capitalized
+            if 'name' in vals and vals['name']:
+                vals['name'] = vals['name'].title()
+
+            # Set default status to 'draft' if not provided
+            if 'status' not in vals:
+                vals['status'] = 'draft'
+            record = super(RequestSubdomain, self).create(vals)
+            approval_process = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.approval_process'
+            )
+            print(approval_process)
+
+            if not approval_process:
+                record.action_accept()
+
+        return record
