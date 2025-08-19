@@ -55,6 +55,8 @@
                         <field name="name"/>
                         <field name="email"/>
                         <field name="subdomain" placeholder="Max 10 characters"/>
+                        <field name="version"/>
+                        <field name="edition"/>
                         <field name="module_ids"/>
                     </group>
                 </sheet>

@@ -22,15 +22,33 @@ class RequestSubdomain(models.Model):
         String='Status',
         default='draft'
     )
+    version = fields.Selection([
+        ('18','18'),
+        ('17','17'),
+        ('16','16'),
+    ],
+        String='Version',
+        default='18',
+    )
+    edition = fields.Selection([
+        ('enterprise','Enterprise'),
+        ('community','Community'),
+    ],
+        String='Edition',
+        default='enterprise'
+    )
 
     def action_accept(self):
         for record in self:
             compose_filename = f"/opt/odoo-on-docker/{record.subdomain}-compose.yml"
-
+            volumes_enterprise = f"- /opt/odoo/server/odoo_{record.version}.0+e/odoo/addons:/mnt/odoo-{record.version}-ee"
+            volumes_enterprise_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ee-custom-addons:/mnt/extra-addons"
+            volumes_community_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ce-custom-addons:/mnt/extra-addons"
             module_names = ','.join(
                 ['{}'.format(name) for name in record.module_ids.mapped('name')]
             )
-
+            if record.version=='17':
+                pass
             yaml_content = f"""\
 services:
   odoo-{record.subdomain}:
@@ -196,7 +214,6 @@ db_filter = ^{record.subdomain}-db
             approval_process = self.env['ir.config_parameter'].sudo().get_param(
                 'request_subdomain.approval_process'
             )
-            print(approval_process)
 
             if not approval_process:
                 record.action_accept()
