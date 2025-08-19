@@ -44,6 +44,8 @@ class RequestSubdomain(models.Model):
             volumes_enterprise = f"- /opt/odoo/server/odoo_{record.version}.0+e/odoo/addons:/mnt/odoo-{record.version}-ee"
             volumes_enterprise_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ee-custom-addons:/mnt/extra-addons"
             volumes_community_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ce-custom-addons:/mnt/extra-addons"
+            addons_path_enterprise = f"/mnt/odoo-{record.version}-ee,/mnt/extra-addons"
+            addons_path_community = f"/mnt/extra-addons"
             module_names = ','.join(
                 ['{}'.format(name) for name in record.module_ids.mapped('name')]
             )
@@ -52,11 +54,11 @@ class RequestSubdomain(models.Model):
             yaml_content = f"""\
 services:
   odoo-{record.subdomain}:
-    image: odoo:18
+    image: odoo:{record.version}
     container_name: {record.subdomain}-container
     volumes:
-      - /opt/odoo/server/odoo_18.0+e/odoo/addons:/mnt/odoo-18-ee
-      - /opt/odoo/custom-addons/odoo-18ee-custom-addons:/mnt/extra-addons
+      {volumes_enterprise if record.edition=="enterprise" else ""}
+      {volumes_enterprise_custom if record.edition=="enterprise" else volumes_community_custom}
       - ./conf/{record.subdomain}.conf:/etc/odoo/odoo.conf
     command: >
       odoo -d {record.subdomain}-db -i {module_names}
@@ -77,7 +79,7 @@ db_host = db
 db_port = 5432
 db_user = shamim
 db_password = shamim
-addons_path = /mnt/odoo-18-ee,/mnt/extra-addons
+addons_path = {addons_path_enterprise if record.edition=="enterprise" else addons_path_community}
 db_filter = ^{record.subdomain}-db
 """
             caddyfile_path = "/opt/odoo-on-docker/Caddyfile"

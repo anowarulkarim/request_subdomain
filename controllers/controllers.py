@@ -21,6 +21,8 @@ class RequestSubdomain(http.Controller):
         name = post.get('name')
         email = post.get('email')
         subdomain = post.get('subdomain')
+        version = post.get('version')
+        edition = post.get('edition')
         selected_modules = request.httprequest.form.getlist('module_ids')
 
         # Create the record
@@ -28,6 +30,8 @@ class RequestSubdomain(http.Controller):
             'name': name,
             'email': email,
             'subdomain': subdomain,
+            'version': version,
+            'edition': edition,
             'module_ids': [
                 (6, 0, request.env['ir.module.module'].sudo().search([('name', 'in', selected_modules)]).ids)]
         })
