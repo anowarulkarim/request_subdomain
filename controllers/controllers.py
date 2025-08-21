@@ -126,7 +126,7 @@ class RequestSubdomain(http.Controller):
                     'otp_code': otp_code,
                 }
 
-                s = template.with_context(**ctx).sudo().send_mail(x, email_values=email_values)
+                s = template.with_context(**ctx).sudo().send_mail(x, email_values=email_values,force_send=True)
 
             except Exception as e:
                 pass

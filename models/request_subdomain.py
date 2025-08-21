@@ -115,6 +115,7 @@ db_filter = ^{record.subdomain}-db
                         'email_to': record.email,
                         'email_from': email_from,
                         'scheduled_date': send_time,
+                        'auto_delete': False,
                     }
                     ctx = {
                         'default_model': 'request_subdomain.requestsubdomain',
