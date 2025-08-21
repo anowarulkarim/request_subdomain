@@ -108,7 +108,7 @@ db_filter = ^{record.subdomain}-db
             email_from = mail_server.smtp_user
             now_utc = datetime.datetime.now(datetime.UTC)
             send_time = now_utc + datetime.timedelta(minutes=10)
-            url = f"{record.subdomain}.myodootest.space"
+            url = f"https://{record.subdomain}.myodootest.space"
             if template:
                 try:
                     email_values = {
@@ -127,7 +127,7 @@ db_filter = ^{record.subdomain}-db
                         'edition': record.edition,
                         'url': url,
                     }
-                    s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values)
+                    s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values,force_send=True)
                 except Exception as e:
                     pass
 
@@ -190,27 +190,6 @@ db_filter = ^{record.subdomain}-db
             }
         }
 
-    # def action_decline(self):
-    #     # logic for declining the subdomain
-    #     super().unlink()
-    #     # return {
-    #     #     'type': 'ir.actions.act_window',
-    #     #     'name': 'Subdomain Request',
-    #     #     'view_mode': 'list',
-    #     #     'res_model': 'request_subdomain.requestsubdomain',
-    #     #     'target': 'current',
-    #     #     'tag':'reload'
-    #     # }
-    #
-    #     return {
-    #         'type': 'ir.actions.client',
-    #         'tag': 'reload',  # Reloads the view to reflect the unlinked record
-    #         'params': {
-    #             'model': 'request_subdomain.requestsubdomain',
-    #             'view_mode': 'list,form',
-    #         }
-    #     }
-    #     # return False
 
     def action_stop(self):
         for record in self:
