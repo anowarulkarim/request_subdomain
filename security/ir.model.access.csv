@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_request_subdomain_request_subdomain,request_subdomain.request_subdomain,model_request_subdomain_requestsubdomain,base.group_user,1,1,1,1
+access_request_subotp_varification,request_subdomain.subotp_varification,model_subotp_varification,base.group_user,1,1,1,1

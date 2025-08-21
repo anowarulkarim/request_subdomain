@@ -1,38 +1,41 @@
 from email.policy import default
 from tokenize import String
-
+import datetime
 from odoo import fields, models, api
-import time,os
+import time, os
+
+from odoo.addons.test_convert.tests.test_env import record
+
 
 class RequestSubdomain(models.Model):
     _name = 'request_subdomain.requestsubdomain'
     _description = 'Description'
 
     name = fields.Char(string="Name")
-    email = fields.Char(string = "email")
+    email = fields.Char(string="email")
     subdomain = fields.Char(string="Subdomain", size=10)
     module_ids = fields.Many2many('ir.module.module', string="Select Modules")
     is_active = fields.Boolean(string="Is active")
     is_stop = fields.Boolean(string="Is stop")
     status = fields.Selection([
-        ('draft','Draft'),
-        ('active','Active'),
-        ('stopped','Stopped'),
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('stopped', 'Stopped'),
     ],
         String='Status',
         default='draft'
     )
     version = fields.Selection([
-        ('18','18'),
-        ('17','17'),
-        ('16','16'),
+        ('18', '18'),
+        ('17', '17'),
+        ('16', '16'),
     ],
         String='Version',
         default='18',
     )
     edition = fields.Selection([
-        ('enterprise','Enterprise'),
-        ('community','Community'),
+        ('enterprise', 'Enterprise'),
+        ('community', 'Community'),
     ],
         String='Edition',
         default='enterprise'
@@ -49,7 +52,7 @@ class RequestSubdomain(models.Model):
             module_names = ','.join(
                 ['{}'.format(name) for name in record.module_ids.mapped('name')]
             )
-            if record.version=='17':
+            if record.version == '17':
                 pass
             yaml_content = f"""\
 services:
@@ -57,8 +60,8 @@ services:
     image: odoo:{record.version}
     container_name: {record.subdomain}-container
     volumes:
-      {volumes_enterprise if record.edition=="enterprise" else ""}
-      {volumes_enterprise_custom if record.edition=="enterprise" else volumes_community_custom}
+      {volumes_enterprise if record.edition == "enterprise" else ""}
+      {volumes_enterprise_custom if record.edition == "enterprise" else volumes_community_custom}
       - ./conf/{record.subdomain}.conf:/etc/odoo/odoo.conf
     command: >
       odoo -d {record.subdomain}-db -i {module_names}
@@ -71,15 +74,15 @@ networks:
 volumes:
   odoo_db_data:
     """
-            conf_filename=f"/opt/odoo-on-docker/conf/{record.subdomain}.conf"
-            conf_content=f"""\
+            conf_filename = f"/opt/odoo-on-docker/conf/{record.subdomain}.conf"
+            conf_content = f"""\
 [options]
 admin_passwd = admin-12321
 db_host = db
 db_port = 5432
 db_user = shamim
 db_password = shamim
-addons_path = {addons_path_enterprise if record.edition=="enterprise" else addons_path_community}
+addons_path = {addons_path_enterprise if record.edition == "enterprise" else addons_path_community}
 db_filter = ^{record.subdomain}-db
 """
             caddyfile_path = "/opt/odoo-on-docker/Caddyfile"
@@ -91,15 +94,42 @@ db_filter = ^{record.subdomain}-db
 """
             with open(compose_filename, 'w') as f:
                 f.write(yaml_content)
-            with open(conf_filename,'w') as f:
+            with open(conf_filename, 'w') as f:
                 f.write(conf_content)
             with open(caddyfile_path, 'a') as f:
                 f.write(caddy_entry)
 
+            record.is_active = True
+            record.is_stop = False
+            record.status = 'active'
 
-            record.is_active=True
-            record.is_stop=False
-            record.status='active'
+            template = self.env.ref('request_subdomain.subdomain_request_accept')
+            mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
+            email_from = mail_server.smtp_user
+            now_utc = datetime.datetime.now(datetime.UTC)
+            send_time = now_utc + datetime.timedelta(minutes=10)
+            url = f"{record.subdomain}.myodootest.space"
+            if template:
+                try:
+                    email_values = {
+                        'email_to': record.email,
+                        'email_from': email_from,
+                        'scheduled_date': send_time,
+                    }
+                    ctx = {
+                        'default_model': 'request_subdomain.requestsubdomain',
+                        'default_res_id': 1,
+                        'default_email_to': record.email,  # Ensure the email field exists
+                        'default_template_id': template.id,
+                        'subdomain': record.subdomain,
+                        'version': record.version,
+                        'edition': record.edition,
+                        'url': url,
+                    }
+                    s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values)
+                except Exception as e:
+                    pass
+
         return {'type': 'ir.actions.act_window_close'}
 
     def action_decline(self):
@@ -183,19 +213,19 @@ db_filter = ^{record.subdomain}-db
 
     def action_stop(self):
         for record in self:
-            file_path="/opt/odoo-on-docker/stop.txt"
-            with open(file_path,'a') as f:
+            file_path = "/opt/odoo-on-docker/stop.txt"
+            with open(file_path, 'a') as f:
                 f.write(f"{record.subdomain}\n")
 
-            self.status="stopped"
+            self.status = "stopped"
 
     def action_start(self):
         for record in self:
-            file_path="/opt/odoo-on-docker/start.txt"
-            with open(file_path,'a') as f:
+            file_path = "/opt/odoo-on-docker/start.txt"
+            with open(file_path, 'a') as f:
                 f.write(f"{record.subdomain}\n")
 
-            self.status="active"
+            self.status = "active"
 
     @api.model_create_multi
     def create(self, vals_list):

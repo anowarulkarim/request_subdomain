@@ -28,6 +28,8 @@ Long description of module's purpose
         'views/request_subdomain.xml',
         'views/portal_template.xml',
         'views/subdomain_settings.xml',
+        'views/email_templates.xml',
+        'views/email_varification.xml',
         'views/menu.xml',
     ],
     # only loaded in demonstration mode

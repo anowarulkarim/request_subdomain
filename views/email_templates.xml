@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="otp_verification_template" model="mail.template">
+        <field name="name">OTP Verification Email</field>
+        <field name="model_id" ref="model_subotp_varification"/>
+        <field name="subject">Your Email Verification Code</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                <p>Dear Customer</p>
+                <p>Your (OTP) for verification is:</p>
+                <h2 style="color: #3498db;">
+                    <t t-out="ctx.get('otp_code')"/>
+                </h2>
+                <p>This OTP is valid for a limited time. Please do not share it with anyone.</p>
+                <p>If you did not request this OTP, please ignore this email.</p>
+                <p>Best regards,</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="subdomain_request_accept" model="mail.template">
+        <field name="name">Subdomain Request Accept</field>
+        <field name="model_id" ref="model_request_subdomain_requestsubdomain"/>
+        <field name="subject">Confirmation of new subdomain</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, Helvetica, sans-serif; color: #333; padding: 20px; line-height: 1.6;">
+                <div style="max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background-color: #fafafa;">
+
+                    <h2 style="text-align: center; color: #4CAF50; margin-bottom: 20px;">
+                        🎉 Your Requested Subdomain is Ready!
+                    </h2>
+
+                    <p style="font-size: 16px; margin: 10px 0;">
+                        <strong>Version:</strong>
+                        <t t-out="ctx.get('version')"/>
+                    </p>
+                    <p style="font-size: 16px; margin: 10px 0;">
+                        <strong>Edition:</strong>
+                        <t t-out="ctx.get('edition')"/>
+                    </p>
+
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a t-att-href="ctx.get('url', '#')"
+                           style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                            Visit Your Odoo Database
+                        </a>
+                    </div>
+
+                    <p style="font-size: 14px; color: #666; text-align: center;">
+                        ⏳ It may take some time the first time you access it. Please be patient.
+                    </p>
+
+                    <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;"/>
+
+                    <h3 style="text-align: center; color: #333; margin-top: 0;">Thank You 🙏</h3>
+                </div>
+            </div>
+
+        </field>
+    </record>
+</odoo>
