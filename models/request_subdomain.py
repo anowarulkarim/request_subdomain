@@ -127,7 +127,7 @@ db_filter = ^{record.subdomain}-db
                         'edition': record.edition,
                         'url': url,
                     }
-                    s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values,force_send=True)
+                    s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values)
                 except Exception as e:
                     pass
 
@@ -198,6 +198,29 @@ db_filter = ^{record.subdomain}-db
                 f.write(f"{record.subdomain}\n")
 
             self.status = "stopped"
+            template = self.env.ref('request_subdomain.subdomain_service_stop')
+            mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
+            email_from = mail_server.smtp_user
+            url = f"https://{record.subdomain}.myodootest.space"
+            if template:
+                try:
+                    email_values={
+                        'email_from':email_from,
+                        'email_to':record.email,
+                        'auto_delete': False,
+                    }
+                    ctx = {
+                        'default_model': 'request_subdomain.requestsubdomain',
+                        'default_res_id': 1,
+                        'default_email_to': record.email,  # Ensure the email field exists
+                        'default_template_id': template.id,
+                        'subdomain': record.subdomain,
+                        'version': record.version,
+                        'edition': record.edition,
+                    }
+                    s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values,force_send=True)
+                except Exception as e:
+                    pass
 
     def action_start(self):
         for record in self:
@@ -206,7 +229,31 @@ db_filter = ^{record.subdomain}-db
                 f.write(f"{record.subdomain}\n")
 
             self.status = "active"
-
+            template = self.env.ref('request_subdomain.subdomain_service_restart')
+            mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
+            email_from = mail_server.smtp_user
+            url = f"https://{record.subdomain}.myodootest.space"
+            if template:
+                try:
+                    email_values = {
+                        'email_from': email_from,
+                        'email_to': record.email,
+                    }
+                    ctx = {
+                        'default_model': 'request_subdomain.requestsubdomain',
+                        'default_res_id': 1,
+                        'default_email_to': record.email,  # Ensure the email field exists
+                        'default_template_id': template.id,
+                        'subdomain': record.subdomain,
+                        'version': record.version,
+                        'edition': record.edition,
+                        'auto_delete': False,
+                        'url': url,
+                    }
+                    s = template.with_context(**ctx).sudo().send_mail(self.id, email_values=email_values,
+                                                                      force_send=True)
+                except Exception as e:
+                    pass
     @api.model_create_multi
     def create(self, vals_list):
         record = self.browse()

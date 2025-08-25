@@ -45,6 +45,14 @@
                             Visit Your Odoo Database
                         </a>
                     </div>
+                    <p style="font-size: 16px; margin: 10px 0;">
+                        <strong>Username:</strong>
+                        <strong>admin</strong>
+                    </p>
+                    <p style="font-size: 16px; margin: 10px 0;">
+                        <strong>Password:</strong>
+                        <strong>admin</strong>
+                    </p>
 
                     <p style="font-size: 14px; color: #666; text-align: center;">
                         ⏳ It may take some time the first time you access it. Please be patient.
@@ -56,6 +64,52 @@
                 </div>
             </div>
 
+        </field>
+    </record>
+
+    <record id="subdomain_service_stop" model="mail.template">
+        <field name="name">Service Stop</field>
+        <field name="model_id" ref="model_request_subdomain_requestsubdomain"/>
+        <field name="subject">Subdomain Service Stopped</field>
+        <field name="body_html" type="html">
+            <div>
+                <h1 style="color:#d9534f;">Service Temporarily Stopped</h1>
+                <p>Dear User</p>
+                <p>Your Odoo service is Temporarily stopped</p>
+                <p style="font-size: 16px; margin: 10px 0;">
+                    <strong>Version:</strong>
+                    <t t-out="ctx.get('version')"/>
+                </p>
+                <p style="font-size: 16px; margin: 10px 0;">
+                    <strong>Edition:</strong>
+                    <t t-out="ctx.get('edition')"/>
+                </p>
+                <p>If you have any urgent questions, please contact our support team.</p>
+            </div>
+        </field>
+    </record>
+    <record id="subdomain_service_restart" model="mail.template">
+        <field name="name">Service Restarted</field>
+        <field name="model_id" ref="model_request_subdomain_requestsubdomain"/>
+        <field name="subject">Subdomain Service Restarted</field>
+        <field name="body_html" type="html">
+            <div>
+                <h1 style="color:#d9534f;">Service Restarted</h1>
+                <p style="font-size: 16px; margin: 10px 0;">
+                    <strong>Version:</strong>
+                    <t t-out="ctx.get('version')"/>
+                </p>
+                <p style="font-size: 16px; margin: 10px 0;">
+                    <strong>Edition:</strong>
+                    <t t-out="ctx.get('edition')"/>
+                </p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a t-att-href="ctx.get('url')"
+                       style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                        Visit Your Odoo Database
+                    </a>
+                </div>
+            </div>
         </field>
     </record>
 </odoo>
