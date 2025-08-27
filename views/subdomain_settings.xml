@@ -17,6 +17,20 @@
                             </div>
                         </setting>
                     </block>
+                    <block title="Domain Name Settings">
+                        <setting id="domain_name_settings" string="Domain Name">
+                            <div class="content-group flex">
+                                <div class="row mt16">
+                                    <field class="w-100" name="domain_name"/>
+                                </div>
+                                <div>
+                                    <button name="add_domain_name" type="object"
+                                            class="btn-primary">Confirm
+                                    </button>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
                 </app>
             </xpath>
         </field>
