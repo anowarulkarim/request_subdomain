@@ -49,6 +49,9 @@ class RequestSubdomain(models.Model):
             volumes_community_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ce-custom-addons:/mnt/extra-addons"
             addons_path_enterprise = f"/mnt/odoo-{record.version}-ee,/mnt/extra-addons"
             addons_path_community = f"/mnt/extra-addons"
+            domain_name= self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.domain_name'
+            )
             module_names = ','.join(
                 ['{}'.format(name) for name in record.module_ids.mapped('name')]
             )
@@ -87,7 +90,7 @@ db_filter = ^{record.subdomain}-db
 """
             caddyfile_path = "/opt/odoo-on-docker/Caddyfile"
             caddy_entry = f"""
-{record.subdomain}.myodootest.space {{
+{record.subdomain}.{domain_name} {{
     reverse_proxy odoo-{record.subdomain}:8069
     encode gzip
 }}\n
@@ -108,7 +111,7 @@ db_filter = ^{record.subdomain}-db
             email_from = mail_server.smtp_user
             now_utc = datetime.datetime.now(datetime.UTC)
             send_time = now_utc + datetime.timedelta(minutes=10)
-            url = f"https://{record.subdomain}.myodootest.space"
+            url = f"https://{record.subdomain}.{domain_name}"
             if template:
                 try:
                     email_values = {
@@ -201,7 +204,10 @@ db_filter = ^{record.subdomain}-db
             template = self.env.ref('request_subdomain.subdomain_service_stop')
             mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
             email_from = mail_server.smtp_user
-            url = f"https://{record.subdomain}.myodootest.space"
+            domain_name = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.domain_name'
+            )
+            url = f"https://{record.subdomain}.{domain_name}"
             if template:
                 try:
                     email_values={
@@ -232,7 +238,10 @@ db_filter = ^{record.subdomain}-db
             template = self.env.ref('request_subdomain.subdomain_service_restart')
             mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
             email_from = mail_server.smtp_user
-            url = f"https://{record.subdomain}.myodootest.space"
+            domain_name = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.domain_name'
+            )
+            url = f"https://{record.subdomain}.{domain_name}"
             if template:
                 try:
                     email_values = {
