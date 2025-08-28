@@ -43,8 +43,25 @@ class RequestSubdomain(models.Model):
 
     def action_accept(self):
         for record in self:
+            ent_path_18 = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.ent_path_18'
+            )
+            ent_path_17 = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.ent_path_17'
+            )
+            ent_path_16 = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.ent_path_16'
+            )
+            volumes_ent_temp=""
+            if record.version=="18":
+                volumes_ent_temp=ent_path_18
+            elif record.version=='17':
+                volumes_ent_temp=ent_path_17
+            else:
+                volumes_ent_temp=ent_path_16
+
             compose_filename = f"/opt/odoo-on-docker/{record.subdomain}-compose.yml"
-            volumes_enterprise = f"- /opt/odoo/server/odoo_{record.version}.0+e/odoo/addons:/mnt/odoo-{record.version}-ee"
+            volumes_enterprise = f"- {volumes_ent_temp}:/mnt/odoo-{record.version}-ee"
             volumes_enterprise_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ee-custom-addons:/mnt/extra-addons"
             volumes_community_custom = f"- /opt/odoo/custom-addons/odoo-{record.version}ce-custom-addons:/mnt/extra-addons"
             addons_path_enterprise = f"/mnt/odoo-{record.version}-ee,/mnt/extra-addons"
@@ -52,6 +69,7 @@ class RequestSubdomain(models.Model):
             domain_name= self.env['ir.config_parameter'].sudo().get_param(
                 'request_subdomain.domain_name'
             )
+
             module_names = ','.join(
                 ['{}'.format(name) for name in record.module_ids.mapped('name')]
             )

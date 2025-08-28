@@ -31,6 +31,29 @@
                             </div>
                         </setting>
                     </block>
+                    <block title="Enterprise Path Settings">
+                        <setting id="enterprise_path_settings_18" string="Odoo 18 Enterprise Path">
+                            <div class="content-group flex">
+                                <div class="row mt16">
+                                    <field class="w-100" name="ent_path_18"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="enterprise_path_settings_17" string="Odoo 17 Enterprise Path">
+                            <div class="content-group flex">
+                                <div class="row mt16">
+                                    <field class="w-100" name="ent_path_17"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="enterprise_path_settings_16" string="Odoo 16 Enterprise Path">
+                            <div class="content-group flex">
+                                <div class="row mt16">
+                                    <field class="w-100" name="ent_path_16"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
                 </app>
             </xpath>
         </field>

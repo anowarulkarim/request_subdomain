@@ -12,6 +12,18 @@ class ResConfigSettings(models.TransientModel):
         string="Domain Name",
         config_parameter='request_subdomain.domain_name',
     )
+    ent_path_18 = fields.Char(
+        string="odoo 18 enterprise path",
+        config_parameter='request_subdomain.ent_path_18'
+    )
+    ent_path_17 = fields.Char(
+        string="odoo 17 enterprise path",
+        config_parameter='request_subdomain.ent_path_17'
+    )
+    ent_path_16 = fields.Char(
+        string="odoo 16 enterprise path",
+        config_parameter='request_subdomain.ent_path_16'
+    )
 
     def add_domain_name(self):
         """
