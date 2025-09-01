@@ -76,6 +76,8 @@ class RequestSubdomain(models.Model):
             domain_name= self.env['ir.config_parameter'].sudo().get_param(
                 'request_subdomain.domain_name'
             )
+            if not domain_name:
+                raise ValidationError(_("Set Domain Name in settings"))
 
             module_names = ','.join(
                 ['{}'.format(name) for name in record.module_ids.mapped('name')]
