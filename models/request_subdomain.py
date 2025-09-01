@@ -1,9 +1,9 @@
 from email.policy import default
 from tokenize import String
 import datetime
-from odoo import fields, models, api
+from odoo import fields, models, api,_
 import time, os
-
+from odoo.exceptions import ValidationError
 from odoo.addons.test_convert.tests.test_env import record
 
 
@@ -54,10 +54,17 @@ class RequestSubdomain(models.Model):
             )
             volumes_ent_temp=""
             if record.version=="18":
+                if not ent_path_18:
+                    raise ValidationError(_("Enterprise 18 path is not defined. Set Enterprise path from settings."))
+
                 volumes_ent_temp=ent_path_18
             elif record.version=='17':
+                if not ent_path_17:
+                    raise ValidationError(_("Enterprise 17 path is not defined. Set Enterprise path from settings."))
                 volumes_ent_temp=ent_path_17
             else:
+                if not ent_path_16:
+                    raise ValidationError(_("Enterprise 16 path is not defined. Set Enterprise path from settings."))
                 volumes_ent_temp=ent_path_16
 
             compose_filename = f"/opt/odoo-on-docker/{record.subdomain}-compose.yml"
