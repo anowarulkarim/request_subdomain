@@ -48,8 +48,8 @@
                         <field name="status" widget="statusbar"/>
                         <button name="action_accept" type="object" class="btn-primary" string="Accept" invisible="status not in ['draft']"/>
                         <button name="action_decline" type="object" class="btn-primary" string="Decline" invisible="status not in ['draft','stopped']"/>
-                        <button name="action_start" type="object" class="btn-secondary" string="Start" invisible="status =='active'"/>
-                        <button name="action_stop" type="object" class="btn-secondary" string="stop" invisible="status =='stopped'"/>
+                        <button name="action_start" type="object" class="btn-secondary" string="Start" invisible="status in ['active','draft']"/>
+                        <button name="action_stop" type="object" class="btn-secondary" string="stop" invisible="status in ['stopped','draft']"/>
                     </header>
                     <group>
                         <field name="name"/>
