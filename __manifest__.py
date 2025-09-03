@@ -24,6 +24,7 @@ Long description of module's purpose
     'data': [
         'security/ir.model.access.csv',
         'views/views.xml',
+        'views/check_stop_time.xml',
         'views/templates.xml',
         'views/request_subdomain.xml',
         'views/portal_template.xml',

@@ -17,6 +17,8 @@ class RequestSubdomain(models.Model):
     module_ids = fields.Many2many('ir.module.module', string="Select Modules")
     is_active = fields.Boolean(string="Is active")
     is_stop = fields.Boolean(string="Is stop")
+    stop_time = fields.Datetime(compute="_compute_end_time", store=True)
+    total_duration = fields.Integer(string="Total Duration of the service")
     status = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -40,6 +42,26 @@ class RequestSubdomain(models.Model):
         String='Edition',
         default='enterprise'
     )
+
+    @api.depends("total_duration")
+    def _compute_end_time(self):
+        now_utc = fields.Datetime.now()
+        for value in self:
+            value.stop_time=now_utc + datetime.timedelta(hours=value.total_duration)
+
+    @api.model
+    def corn_check_stop_time(self):
+        """This method is called by cron to stop services whose stop_time has passed."""
+        now_utc = fields.Datetime.now()
+        record_to_stop = self.search([
+            ('stop_time', '<=', now_utc),
+            ('status','=', 'active')
+        ])
+
+        for record in record_to_stop:
+            record.action_stop()
+            record.action_decline()
+
 
     def action_accept(self):
         for record in self:

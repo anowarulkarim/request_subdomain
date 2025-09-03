@@ -34,8 +34,15 @@ class RequestSubdomain(http.Controller):
         subdomain = post.get('subdomain')
         version = post.get('version')
         edition = post.get('edition')
+        duration = post.get('duration')
         selected_modules = request.httprequest.form.getlist('module_ids')
-
+        total_duration=0
+        if duration=="3":
+            total_duration=3
+        elif duration=="month":
+            total_duration = 30*24
+        else:
+            total_duration = 365*24
         # Create the record
         record = request.env['request_subdomain.requestsubdomain'].sudo().create({
             'name': name,
@@ -43,6 +50,7 @@ class RequestSubdomain(http.Controller):
             'subdomain': subdomain,
             'version': version,
             'edition': edition,
+            'total_duration': total_duration,
             'module_ids': [
                 (6, 0, request.env['ir.module.module'].sudo().search([('name', 'in', selected_modules)]).ids)]
         })
@@ -87,9 +95,14 @@ class RequestSubdomain(http.Controller):
         """Generate OTP and store email in session"""
         email = post.get('email')
 
+
         if not email:
             return http.Response('{"status": "error", "message": "Email is required"}', content_type='application/json')
 
+        user = request.env['request_subdomain.requestsubdomain'].sudo().search([('email', '=', email)], limit=1)
+        if user:
+            return http.Response('{"status": "error", "message": "This email already in use. Use different email."}',
+                                 content_type='application/json')
         # Generate OTP
         otp_code = str(random.randint(100000, 999999))
         expiry_time = datetime.datetime.now() + datetime.timedelta(minutes=5)

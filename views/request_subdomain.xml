@@ -57,6 +57,8 @@
                         <field name="subdomain" placeholder="Max 10 characters"/>
                         <field name="version"/>
                         <field name="edition"/>
+                        <field name="stop_time"/>
+                        <field name="total_duration"/>
                         <field name="module_ids"/>
                     </group>
                 </sheet>
