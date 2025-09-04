@@ -18,7 +18,16 @@ class RequestSubdomain(models.Model):
     is_active = fields.Boolean(string="Is active")
     is_stop = fields.Boolean(string="Is stop")
     stop_time = fields.Datetime(compute="_compute_end_time", store=True)
-    total_duration = fields.Integer(string="Total Duration of the service")
+    approved_date = fields.Datetime(string="Date when request approved")
+    # total_duration = fields.Integer(string="Total Duration of the service")
+    total_duration = fields.Selection([
+        ('3','3 Hours'),
+        ('month','1 Month'),
+        ('year','1 Year'),
+    ],
+        String="Total Duration of the service",
+        default='3',
+    )
     status = fields.Selection([
         ('draft', 'Draft'),
         ('active', 'Active'),
@@ -47,7 +56,16 @@ class RequestSubdomain(models.Model):
     def _compute_end_time(self):
         now_utc = fields.Datetime.now()
         for value in self:
-            value.stop_time=now_utc + datetime.timedelta(hours=value.total_duration)
+            if value.status != "draft":
+                now_utc = value.approved_date
+            temp_duration=3
+            if value.total_duration=="3":
+                temp_duration=3
+            elif value.total_duration=="month":
+                temp_duration=30*24
+            else:
+                temp_duration=365*24
+            value.stop_time=now_utc + datetime.timedelta(hours=temp_duration)
 
     @api.model
     def corn_check_stop_time(self):
@@ -60,7 +78,6 @@ class RequestSubdomain(models.Model):
 
         for record in record_to_stop:
             record.action_stop()
-            record.action_decline()
 
 
     def action_accept(self):
@@ -182,7 +199,7 @@ db_filter = ^{record.subdomain}-db
                     s = template.with_context(**ctx).sudo().send_mail(self.id,email_values=email_values)
                 except Exception as e:
                     pass
-
+            record.approved_date=fields.datetime.now()
         return {'type': 'ir.actions.act_window_close'}
 
     def action_decline(self):

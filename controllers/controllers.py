@@ -36,13 +36,7 @@ class RequestSubdomain(http.Controller):
         edition = post.get('edition')
         duration = post.get('duration')
         selected_modules = request.httprequest.form.getlist('module_ids')
-        total_duration=0
-        if duration=="3":
-            total_duration=3
-        elif duration=="month":
-            total_duration = 30*24
-        else:
-            total_duration = 365*24
+
         # Create the record
         record = request.env['request_subdomain.requestsubdomain'].sudo().create({
             'name': name,
@@ -50,7 +44,7 @@ class RequestSubdomain(http.Controller):
             'subdomain': subdomain,
             'version': version,
             'edition': edition,
-            'total_duration': total_duration,
+            'total_duration': duration,
             'module_ids': [
                 (6, 0, request.env['ir.module.module'].sudo().search([('name', 'in', selected_modules)]).ids)]
         })

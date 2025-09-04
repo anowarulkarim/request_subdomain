@@ -59,6 +59,7 @@
                         <field name="edition"/>
                         <field name="stop_time"/>
                         <field name="total_duration"/>
+                        <field name="approved_date"/>
                         <field name="module_ids"/>
                     </group>
                 </sheet>
