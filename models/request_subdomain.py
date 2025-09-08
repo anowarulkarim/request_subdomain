@@ -79,7 +79,6 @@ class RequestSubdomain(models.Model):
         for record in record_to_stop:
             record.action_stop()
 
-
     def action_accept(self):
         for record in self:
             ent_path_18 = self.env['ir.config_parameter'].sudo().get_param(
@@ -132,6 +131,7 @@ services:
       {volumes_enterprise if record.edition == "enterprise" else ""}
       {volumes_enterprise_custom if record.edition == "enterprise" else volumes_community_custom}
       - ./conf/{record.subdomain}.conf:/etc/odoo/odoo.conf
+      - /opt/odoo-on-docker:/opt/odoo-on-docker/
     command: >
       odoo -d {record.subdomain}-db -i {module_names}
     networks:
@@ -258,7 +258,6 @@ db_filter = ^{record.subdomain}-db
                 'view_mode': 'list,form',
             }
         }
-
 
     def action_stop(self):
         for record in self:
