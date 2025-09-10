@@ -133,7 +133,7 @@ services:
       - ./conf/{record.subdomain}.conf:/etc/odoo/odoo.conf
       - /opt/odoo-on-docker:/opt/odoo-on-docker/
     command: >
-      odoo -d {record.subdomain}-db -i {module_names}
+      odoo -d {record.subdomain}-db -i {module_names},package_install
     networks:
       - odoo-net
 

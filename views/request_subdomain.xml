@@ -52,14 +52,18 @@
                         <button name="action_stop" type="object" class="btn-secondary" string="stop" invisible="status in ['stopped','draft']"/>
                     </header>
                     <group>
+                        <group>
                         <field name="name"/>
                         <field name="email"/>
                         <field name="subdomain" placeholder="Max 10 characters"/>
                         <field name="version"/>
+                            </group>
+                        <group>
                         <field name="edition"/>
                         <field name="stop_time"/>
                         <field name="total_duration"/>
                         <field name="approved_date"/>
+                            </group>
                         <field name="module_ids"/>
                     </group>
                 </sheet>
