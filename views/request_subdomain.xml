@@ -64,7 +64,18 @@
                         <field name="total_duration"/>
                         <field name="approved_date"/>
                             </group>
-                        <field name="module_ids"/>
+                        <notebook>
+                            <page name="module_ids">
+                                <field name="module_ids">
+                                    <list>
+                                        <field name="shortdesc"/>
+                                        <field name="name"/>
+                                        <field name="author"/>
+                                        <field name="website"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
                     </group>
                 </sheet>
             </form>
