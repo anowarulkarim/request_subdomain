@@ -5,6 +5,15 @@ document.getElementById("subdomain_input").addEventListener("keyup", async funct
 
 
     const enteredSubdomain = input.value.trim().toLowerCase();
+    const domainRegex = /^(?!-)[a-z0-9-]{1,63}(?<!-)$/;
+
+    if (!domainRegex.test(enteredSubdomain)) {
+        errmsg.innerText = "Invalid subdomain: only letters, numbers, and hyphens allowed. Cannot start or end with a hyphen.";
+        errmsg.style.display = "block";
+        submitButton.style.pointerEvents = "none";
+        submitButton.style.cursor = "not-allowed";
+        return; // stop here, don’t check availability
+    }
 
     try {
         const response = await fetch("/check-subdomains", {
