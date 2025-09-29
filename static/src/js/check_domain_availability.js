@@ -25,6 +25,7 @@ document.getElementById("subdomain_input").addEventListener("keyup", async funct
         const data = await response.json();
 
         if (data.result.subdomains && data.result.subdomains.includes(enteredSubdomain)) {
+            errmsg.innerText ="This subdomain is already in use";
             errmsg.style.display = "block";
             submitButton.style.pointerEvents = "none";
             submitButton.style.cursor = "not-allowed";

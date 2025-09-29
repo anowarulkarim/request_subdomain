@@ -53,13 +53,8 @@ class RequestSubdomain(http.Controller):
 
     @http.route('/check-subdomains', type='json', auth='public', csrf=False)
     def check_subdomains(self):
-        subdomains = []
-        try:
-            with open('/opt/odoo-on-docker/Caddyfile', 'r') as f:
-                content = f.read()
-                subdomains = re.findall(r'(\w+)\.myodootest\.space', content)
-        except Exception as e:
-            return {'error': str(e)}
+        subdomains = request.env['request_subdomain.requestsubdomain'].sudo().search([]).mapped('subdomain')
+
         return {'subdomains': list(set(subdomains))}
 
     @http.route('/my/subdomains', type='http', auth='user', website=True)
