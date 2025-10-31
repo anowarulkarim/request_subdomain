@@ -53,6 +53,13 @@
                                 </div>
                             </div>
                         </setting>
+                        <setting id="enterprise_path_settings_19" string="Odoo 19 Enterprise Path">
+                            <div class="content-group flex">
+                                <div class="row mt16">
+                                    <field class="w-100" name="ent_path_19"/>
+                                </div>
+                            </div>
+                        </setting>
                     </block>
                 </app>
             </xpath>

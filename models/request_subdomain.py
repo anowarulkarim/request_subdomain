@@ -40,6 +40,7 @@ class RequestSubdomain(models.Model):
         ('18', '18'),
         ('17', '17'),
         ('16', '16'),
+        ('19', '19'),
     ],
         String='Version',
         default='18',
@@ -90,6 +91,9 @@ class RequestSubdomain(models.Model):
             ent_path_16 = self.env['ir.config_parameter'].sudo().get_param(
                 'request_subdomain.ent_path_16'
             )
+            ent_path_19 = self.env['ir.config_parameter'].sudo().get_param(
+                'request_subdomain.ent_path_19'
+            )
             volumes_ent_temp=""
             if record.version=="18":
                 if not ent_path_18:
@@ -100,6 +104,10 @@ class RequestSubdomain(models.Model):
                 if not ent_path_17:
                     raise ValidationError(_("Enterprise 17 path is not defined. Set Enterprise path from settings."))
                 volumes_ent_temp=ent_path_17
+            elif record.version=='19':
+                if not ent_path_19:
+                    raise ValidationError(_("Enterprise 19 path is not defined. Set Enterprise path from settings."))
+                volumes_ent_temp= ent_path_19
             else:
                 if not ent_path_16:
                     raise ValidationError(_("Enterprise 16 path is not defined. Set Enterprise path from settings."))
@@ -133,7 +141,7 @@ services:
       - ./conf/{record.subdomain}.conf:/etc/odoo/odoo.conf
       - /opt/odoo-on-docker:/opt/odoo-on-docker/
     command: >
-      odoo -d {record.subdomain}-db -i {module_names},package_install
+      odoo -d {record.subdomain}-db -i {module_names}{"" if record.version == "19" else ",package_install"}
     networks:
       - odoo-net
 
